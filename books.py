@@ -31,10 +31,26 @@ def add_book():
 
         if book_type not in [1, 2, 3]:
             return jsonify({"message": "Invalid book_type"}), 400
+        
+        existing_book = Book.query.filter_by(
+            name=name,
+            author=author,
+            year_published=year_published,
+            book_type=book_type
+        ).first()
 
+        if existing_book:
+            existing_book.quantity += 1
+        else:
         # Create a new Book object and add it to the database
-        book = Book(name=name, author=author, year_published=year_published, book_type=book_type)
-        db.session.add(book)
+            new_book = Book(
+                name=name,
+                author=author,
+                year_published=year_published,
+                book_type=book_type
+            )
+            db.session.add(new_book)
+
         db.session.commit()
 
         return jsonify({"message": "Book added successfully"}), 201
