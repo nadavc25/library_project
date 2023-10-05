@@ -1,10 +1,29 @@
 # loans.py
 from datetime import datetime
-from flask import Blueprint, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
-from models import Loan, db
+from flask import Blueprint, request, jsonify
+
+from project import db
+from project.loans.models import Loan
+
+
+def __init__(self, cust_id, book_id, loan_date, return_date=None):
+        self.cust_id = cust_id
+        self.book_id = book_id
+        self.loan_date = loan_date
+        self.return_date = return_date
+
+def to_dict(self):
+        return {
+            "id": self.id,
+            "cust_id": self.cust_id,
+            "book_id": self.book_id,
+            "loan_date": self.loan_date,
+            "return_date": self.return_date
+        }
 
 loans_bp = Blueprint('loans', __name__)
+
+
 
 def validate_date(date_str):
     try:

@@ -1,6 +1,9 @@
 # books.py
-from flask import Blueprint, jsonify, request
-from models import Book, db
+from flask import Blueprint, request, jsonify
+from project import db
+from project.books.models import Book
+
+
 
 books_bp = Blueprint('books_bp', __name__)
 
@@ -50,10 +53,10 @@ def add_book():
                 book_type=book_type
             )
             db.session.add(new_book)
-
         db.session.commit()
 
         return jsonify({"message": "Book added successfully"}), 201
+    
     except Exception as e:
         print("Error:", str(e))  # Add this line for debugging
         db.session.rollback()
