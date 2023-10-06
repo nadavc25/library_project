@@ -9,7 +9,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 
 def create_app():
-    app = Flask(__name__, static_folder='static')
+    app = Flask(__name__, static_folder='static', template_folder='templates')
 
     instance_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'instance')
     if not os.path.exists(instance_path):

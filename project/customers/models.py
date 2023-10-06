@@ -8,7 +8,6 @@ class Customer(db.Model):
     city = db.Column(db.String)
     age = db.Column(db.Integer)
 
-
     def __init__(self, name, city, age):
         self.name = name
         self.city = city

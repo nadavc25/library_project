@@ -10,8 +10,10 @@ class Book(db.Model):
     book_type = db.Column(db.Integer)
     quantity = db.Column(db.Integer, default=1)
 
-    def __init__(self, name, author, year_published, book_type, quantity=1):
-        self.name = name
+    loans = db.relationship('Loan', back_populates='book')
+
+    def __init__(self, title, author, year_published, book_type, quantity=1):
+        self.title = title
         self.author = author
         self.year_published = year_published
         self.book_type = book_type
@@ -20,7 +22,7 @@ class Book(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "name": self.name,
+            "title": self.title,
             "author": self.author,
             "year_published": self.year_published,
             "book_type": self.book_type,
