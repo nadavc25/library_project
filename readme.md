@@ -36,7 +36,7 @@ The Library Management System is a web application built with Flask and JavaScri
 
 ## Getting Started
 
-1. Clone this repository to your local machine. ``
+1. Clone this repository to your local machine. `https://github.com/nadavc25/library_project.git`
 2. Install the required Python packages by running `pip install -r requirements.txt`.
 3. Run the Flask application by executing `python app.py`.
 4. Open a web browser and navigate to `http://localhost:5000` to access the Library Management System.
@@ -56,10 +56,6 @@ The Library Management System is a web application built with Flask and JavaScri
 - **Loan Management:**
   - To loan a book to a customer, select a customer and a book, and click "Loan Book".
   - To return a book, click the "Return Loan" button.
-
-## Contributors
-
-- [Your Name](https://github.com/your-username)
 
 ## License
 
