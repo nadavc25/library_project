@@ -1,4 +1,4 @@
-# customers.py
+# project/customers/customers.py
 from flask import Blueprint, request, jsonify
 from project import db
 from project.customers.models import Customer

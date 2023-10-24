@@ -1,4 +1,4 @@
-# database.py
+#database.py
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, Integer, String, Date, ForeignKey, text

@@ -1,4 +1,4 @@
-# project/books/models.py
+# project/books/models.py:
 from project import db
 
 class Book(db.Model):
@@ -10,7 +10,9 @@ class Book(db.Model):
     book_type = db.Column(db.Integer)
     quantity = db.Column(db.Integer, default=1)
 
+    # Use a string for the relationship
     loans = db.relationship('Loan', back_populates='book')
+
 
     def __init__(self, title, author, year_published, book_type, quantity=1):
         self.title = title

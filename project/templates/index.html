@@ -4,13 +4,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library App</title>
+    <title>Library App - Manage Customers</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
- 
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-    
+    <div class="container mt-5">
+        <h2>Loan Management</h2>
+        <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#loanManagementModal">Manage Loans</button>
+    </div>
+    <!-- Loan Management Modal -->
+<div class="modal fade" id="loanManagementModal" tabindex="-1" role="dialog" aria-labelledby="loanManagementModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loanManagementModalLabel">Loan Management</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Table to display loans -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Customer</th>
+                            <th>Book</th>
+                            <th>Loan Date</th>
+                            <th>Return Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="loans-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
     <div class="container mt-5">
         <h2>Books</h2>
         <!-- Search form -->
@@ -27,6 +64,7 @@
         </div>
         <!-- Add Book button -->
         <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addModal">Add Book</button>
+
         <!-- Books table -->
         <table class="table">
             <thead>
@@ -130,8 +168,6 @@
     </div>
 
 
-
-    <!-- Customers section -->
 
 
     <div class="container mt-5">
@@ -237,29 +273,49 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    
-<!-- Custom scripts -->
-<script src="/static/js/books.js"></script>
-<script src="/static/js/customers.js"></script>
+    <!-- Loan Book Modal -->
+    <div class="modal fade" id="loanBookModal" tabindex="-1" role="dialog" aria-labelledby="loanBookModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loanBookModalLabel">Loan Book</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Loan Book Form -->
+                    <form id="loanBookForm">
+                        <div class="form-group">
+                            <label for="loanBookID">Select a Book:</label>
+                            <select class="form-control" id="loanBookID" required>
+                                <!-- Book options will be populated using JavaScript -->
+                            </select>
+                        </div>
+                        
+                        <!-- Submit button for loaning the book -->
+                        <button type="submit" class="btn btn-primary">Loan Book</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
-<!-- 
+
+
     <script>
 
-        // books manage part
+        // books:
 
-
-        const apiUrl = 'http://127.0.0.1:5000';  // Replace with your actual API endpoint
+        const apiUrl = 'http://127.0.0.1:5000/';
         let books = [];
 
         const fetchBooks = async () => {
             try {
-                const response = await axios.get(`${apiUrl}/books`);
+                const response = await axios.get(`/books`);
                 books = response.data;
                 displayBooks(books);
             } catch (error) {
@@ -279,24 +335,25 @@
                 };
 
                 const row = `
-            <tr>
-                <td>${book.id}</td>
-                <td>${book.title}</td>
-                <td>${book.author}</td>
-                <td>${book.year_published}</td>
-                <td>${typeMapping[book.book_type]}</td>
-                <td>${book.quantity}</td>
-                <td>
-                    <button class="btn btn-danger btn-sm" onclick="deleteBook(${book.id})">Delete</button>
-                    <button class="btn btn-primary btn-sm ml-2" onclick="editBook(${book.id})">Edit</button>
-                </td>
-            </tr>
-        `;
+                <tr>
+                    <td>${book.id}</td>
+                    <td>${book.title}</td>
+                    <td>${book.author}</td>
+                    <td>${book.year_published}</td>
+                    <td>${typeMapping[book.book_type]}</td>
+                    <td>${book.quantity}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="deleteBook(${book.id})">Delete</button>
+                        <button class="btn btn-primary btn-sm ml-2" onclick="editBook(${book.id})">Edit</button>
+                    </td>
+                </tr>
+            `;
                 booksTableBody.innerHTML += row;
             });
         };
 
         const searchBooks = () => {
+            console.log('searchBooks function called');
             const searchOption = document.getElementById('searchOption').value;
             const searchText = document.getElementById('searchBox').value.toLowerCase();
 
@@ -322,14 +379,15 @@
 
         const addBook = (event) => {
             event.preventDefault();
-
-            const name = document.getElementById('addName').value;
+            console.log("start adding");
+            const title = document.getElementById('addName').value;
             const author = document.getElementById('addAuthor').value;
             const yearPublished = document.getElementById('addYear').value;
             const bookType = document.getElementById('addType').value;
+            console.log(name, author, yearPublished, bookType);
 
             axios.post(`${apiUrl}/books`, {
-                name,
+                name: title,
                 author,
                 year_published: yearPublished,
                 book_type: bookType
@@ -337,10 +395,10 @@
                 .then(response => {
                     fetchBooks(); // Refresh the book list after adding
                     $('#addModal').modal('hide');
-                    document.getElementById('addName').value = ''
-                    document.getElementById('addAuthor').value = ''
-                    document.getElementById('addYear').value = ''
-                    document.getElementById('addType').value = ''
+                    // Reset the form fields
+                    document.getElementById('addName').value = '';
+                    document.getElementById('addAuthor').value = '';
+                    document.getElementById('addYear').value = '';
                 })
                 .catch(error => console.error('Error adding book:', error));
         };
@@ -359,15 +417,19 @@
 
         const editBook = (bookId) => {
             const book = books.find(b => b.id === bookId);
-            console.log('Edit Book:', book);
             document.getElementById('editBookId').value = book.id;
+            console.log("id added");
             document.getElementById('editName').value = book.title;
+            console.log("title added");
             document.getElementById('editAuthor').value = book.author;
+            console.log("author added");
             document.getElementById('editYear').value = book.year_published;
+            console.log("year_published added");
             document.getElementById('editType').value = book.book_type;
+            console.log("book_type added");
             $('#editModal').modal('show');
         };
-        
+
         const saveChanges = () => {
             const bookId = document.getElementById('editBookId').value;
             const name = document.getElementById('editName').value;
@@ -375,12 +437,9 @@
             const yearPublished = document.getElementById('editYear').value;
             const bookType = document.getElementById('editType').value;
 
-            console.log('Editing Book:', { bookId, name, author, yearPublished, bookType });
-
             axios.put(`${apiUrl}/books/${bookId}`, {
                 title: name,
                 author,
-
                 year_published: yearPublished,
                 book_type: bookType
             })
@@ -391,20 +450,24 @@
                 .catch(error => console.error('Error updating book:', error));
         };
 
+        // Add event listeners
         document.getElementById('addBookForm').addEventListener('submit', addBook);
+        document.getElementById('searchBox').addEventListener('input', searchBooks);
 
         // Initial fetch of books when the page loads
         fetchBooks();
 
 
-        // customers mangage part
 
-        const customerApiUrl = 'http://127.0.0.1:5000/customers';  // Replace with your actual API endpoint
+
+        // customers:
+
+        const apiUrl2 = 'http://127.0.0.1:5000'
         let customers = [];
 
         const fetchCustomers = async () => {
             try {
-                const response = await axios.get(customerApiUrl);
+                const response = await axios.get(`${apiUrl2}/customers`);
                 customers = response.data;
                 displayCustomers(customers);
             } catch (error) {
@@ -426,6 +489,7 @@
                 <td>
                     <button class="btn btn-danger btn-sm" onclick="deleteCustomer(${customer.id})">Delete</button>
                     <button class="btn btn-primary btn-sm ml-2" onclick="editCustomer(${customer.id})">Edit</button>
+                    <button class="btn btn-primary btn-sm ml-2" data-customer-id="${customer.id}" data-toggle="modal" data-target="#loanBookModal" onclick="loanBook(${customer.id})" >Loan Book</button>
                 </td>
             </tr>
         `;
@@ -464,7 +528,7 @@
             const city = document.getElementById('addCustomerCity').value;
             const age = document.getElementById('addCustomerAge').value;
 
-            axios.post(customerApiUrl, {
+            axios.post(`${apiUrl2}/customers`, {
                 name,
                 city,
                 age
@@ -486,7 +550,7 @@
 
             // Check if the user confirmed
             if (isConfirmed) {
-                axios.delete(`${customerApiUrl}/${customerId}`)
+                axios.delete(`${apiUrl2}/customers/${customerId}`)
                     .then(response => fetchCustomers())
                     .catch(error => console.error('Error deleting customer:', error));
             }
@@ -498,7 +562,7 @@
             const city = document.getElementById('editCustomerCity').value;
             const age = document.getElementById('editCustomerAge').value;
 
-            axios.put(`${customerApiUrl}/${customerId}`, {
+            axios.put(`${apiUrl2}/customers/${customerId}`, {
                 name,
                 city,
                 age
@@ -523,7 +587,124 @@
 
         fetchCustomers();
 
-    </script> -->
+        // ...
+
+        // Function to fetch available books for loan
+
+        const fetchAvailableBooks = async () => {
+            try {
+                const response = await axios.get(`${apiUrl}/books`);
+                const availableBooks = response.data;
+                const loanBookSelect = document.getElementById('loanBookID');
+                loanBookSelect.innerHTML = ''; // Clear the select options
+
+                availableBooks.forEach(book => {
+                    const option = document.createElement('option');
+                    option.value = book.id;
+                    option.textContent = `${book.title} by ${book.author}`;
+                    loanBookSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching available books:', error);
+            }
+        };
+
+        const loanBook = (customerId) => {
+            // Fetch available books before showing the loan modal
+            fetchAvailableBooks();
+            console.log("fetch books");
+            // Show the loan book modal
+            $('#loanBookModal').modal('show');
+
+            // Set the customer's ID as a data attribute in the form
+            const loanBookForm = document.getElementById('loanBookForm');
+            loanBookForm.setAttribute('data-customer-id', customerId);
+        };
+
+        // Function to submit a book loan request
+        const loanBookSubmit = async (event) => {
+            event.preventDefault();
+            const customerId = event.target.getAttribute('data-customer-id');
+            const bookId = document.getElementById('loanBookID').value;
+            console.log(customerId, bookId);
+
+            try {
+                await axios.post(`${apiUrl}/loans`, {
+                    cust_id: customerId,
+                    book_id: bookId
+                });
+                console.log("added");
+
+                // Clear the loan form and close the modal
+                document.getElementById('loanBookForm').reset();
+                $('#loanBookModal').modal('hide');
+            } catch (error) {
+                console.error('Error loaning the book:', error);
+
+                // Display a user-friendly error message
+                alert('An error occurred while loaning the book. Please try again later.');
+            }
+        };
+
+        // Add an event listener for the loan book form
+        document.getElementById('loanBookForm').addEventListener('submit', loanBookSubmit);
+// Function to fetch and display loans
+const fetchLoans = async () => {
+    try {
+        const response = await axios.get(`${apiUrl}/loans`);
+        const loans = response.data;
+
+        const loansTableBody = document.getElementById('loans-table-body');
+        loansTableBody.innerHTML = '';
+
+        loans.forEach(loan => {
+            const row = `
+                <tr>
+                    <td>${loan.id}</td>
+                    <td>${loan.customer_name}</td>
+                    <td>${loan.book_title}</td>
+                    <td>${loan.loan_date}</td>
+                    <td>${loan.return_date ? loan.return_date : 'Not returned'}</td>
+                    <td>
+                        <button class="btn btn-success btn-sm" onclick="returnLoan(${loan.id})">Return</button>
+                    </td>
+                </tr>
+            `;
+            loansTableBody.innerHTML += row;
+        });
+    } catch (error) {
+        console.error('Error fetching loans:', error);
+    }
+};
+
+// Function to open the Loan Management modal
+const openLoanManagementModal = () => {
+    fetchLoans(); // Fetch and display the list of loans
+    $('#loanManagementModal').modal('show');
+};
+
+// Add an event listener to the "Manage Loans" button
+const manageLoansButton = document.querySelector('.btn.btn-primary.mb-3');
+manageLoansButton.addEventListener('click', openLoanManagementModal);
+const returnLoan = (loanId) => {
+    const isConfirmed = window.confirm("Are you sure you want to return this book?");
+
+    if (isConfirmed) {
+        axios.put(`${apiUrl}/loans/${loanId}`, {loanId})
+            .then(response => {
+                // Refresh the list of loans
+                fetchLoans();
+            })
+            .catch(error => {
+                console.error('Error returning loan:', error);
+                alert('An error occurred while returning the book. Please try again later.');
+            });
+            alert('book return sucssesfuly');
+    }
+};
+
+
+    </script>
 </body>
 
 </html>

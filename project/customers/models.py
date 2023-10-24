@@ -1,3 +1,4 @@
+# project/customers/models.py
 from project import db
 
 class Customer(db.Model):

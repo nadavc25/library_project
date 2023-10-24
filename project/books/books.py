@@ -1,4 +1,4 @@
-# books.py
+# project/books/books.py:
 from flask import Blueprint, request, jsonify
 from project import db
 from project.books.models import Book
